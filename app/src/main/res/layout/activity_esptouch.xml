@@ -8,50 +8,70 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/apSsidLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:text="@string/esptouch1_ssid_title"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/colorAccent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <TextView-->
+<!--        android:id="@+id/apSsidLabel"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:singleLine="true"-->
+<!--        android:text="@string/esptouch1_ssid_title"-->
+<!--        android:textAppearance="?android:attr/textAppearanceSmall"-->
+<!--        android:textColor="@color/colorAccent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-    <TextView
-        android:id="@+id/apSsidText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:singleLine="true"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        app:layout_constraintBaseline_toBaselineOf="@id/apSsidLabel"
-        app:layout_constraintStart_toEndOf="@id/apSsidLabel"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <TextView-->
+<!--        android:id="@+id/apSsidText"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="4dp"-->
+<!--        android:singleLine="true"-->
+<!--        android:textAppearance="?android:attr/textAppearanceMedium"-->
+<!--        app:layout_constraintBaseline_toBaselineOf="@id/apSsidLabel"-->
+<!--        app:layout_constraintStart_toEndOf="@id/apSsidLabel"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
-    <TextView
-        android:id="@+id/apBssidLabel"
-        android:layout_width="wrap_content"
+<!--    <TextView-->
+<!--        android:id="@+id/apBssidLabel"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:singleLine="true"-->
+<!--        android:text="@string/esptouch1_bssid_title"-->
+<!--        android:textAppearance="?android:attr/textAppearanceSmall"-->
+<!--        android:textColor="@color/colorAccent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/apSsidLabel" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/apBssidText"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="4dp"-->
+<!--        android:singleLine="true"-->
+<!--        android:textAppearance="?android:attr/textAppearanceMedium"-->
+<!--        app:layout_constraintBaseline_toBaselineOf="@id/apBssidLabel"-->
+<!--        app:layout_constraintStart_toEndOf="@id/apBssidLabel"-->
+<!--        app:layout_constraintTop_toTopOf="@id/apBssidLabel" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/apssidLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:singleLine="true"
-        android:text="@string/esptouch1_bssid_title"
+        android:hint="@string/esptouch1_ssid_title"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/colorAccent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/apSsidLabel" />
+        app:layout_constraintTop_toTopOf="parent" >
 
-    <TextView
-        android:id="@+id/apBssidText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:singleLine="true"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        app:layout_constraintBaseline_toBaselineOf="@id/apBssidLabel"
-        app:layout_constraintStart_toEndOf="@id/apBssidLabel"
-        app:layout_constraintTop_toTopOf="@id/apBssidLabel" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/apssidEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:text="" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/apPasswordLayout"
@@ -60,7 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:hint="@string/esptouch1_password_title"
-        app:layout_constraintTop_toBottomOf="@id/apBssidLabel"
+        app:layout_constraintTop_toBottomOf="@id/apssidLayout"
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText

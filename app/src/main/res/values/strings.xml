@@ -8,7 +8,7 @@
 
     <string name="esptouch_message_permission">APP require Location permission to get Wi-Fi information. \nClick to request permission</string>
     <string name="esptouch_message_location">Please turn on GPS to get Wi-Fi information.</string>
-    <string name="esptouch_message_wifi_connection">Please connect Wi-Fi first.</string>
+    <string name="esptouch_message_wifi_connection">Please connect Wi-Fi first,or input AP SSID</string>
     <string name="esptouch_message_wifi_frequency">Current Wi-Fi connection is 5G, but the device just support 2.4G.</string>
 
     <string name="esptouch1_title">EspTouch</string>

@@ -6,8 +6,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 class EspTouchViewModel {
-    TextView apSsidTV;
-    TextView apBssidTV;
+    EditText apSsidTV;
+//    TextView apBssidTV;
     EditText apPasswordEdit;
     EditText serverIpEdit;
     EditText deviceCountEdit;
@@ -25,7 +25,7 @@ class EspTouchViewModel {
 
     void invalidateAll() {
         apSsidTV.setText(ssid);
-        apBssidTV.setText(bssid);
+//        apBssidTV.setText(bssid);
         messageView.setText(message);
         confirmBtn.setEnabled(confirmEnable);
     }

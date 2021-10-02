@@ -67,8 +67,8 @@ public class EspTouchActivity extends EspTouchActivityAbs {
         myHandler =   new MyHandler(this);
         myBroadcastReceiver = new MyBroadcastReceiver();
         context = this;
-        mViewModel.apSsidTV = findViewById(R.id.apSsidText);
-        mViewModel.apBssidTV = findViewById(R.id.apBssidText);
+        mViewModel.apSsidTV = findViewById(R.id.apssidEdit);
+//        mViewModel.apBssidTV = findViewById(R.id.apBssidText);
         mViewModel.apPasswordEdit = findViewById(R.id.apPasswordEdit);
         mViewModel.deviceCountEdit = findViewById(R.id.deviceCountEdit);
         mViewModel.messageView = findViewById(R.id.messageView);
@@ -146,9 +146,8 @@ public class EspTouchActivity extends EspTouchActivityAbs {
         mViewModel.ssid = stateResult.ssid;
         mViewModel.ssidBytes = stateResult.ssidBytes;
         mViewModel.bssid = stateResult.bssid;
-        mViewModel.confirmEnable = false;
+        mViewModel.confirmEnable = true;
         if (stateResult.wifiConnected) {
-            mViewModel.confirmEnable = true;
             if (stateResult.is5G) {
                 mViewModel.message = getString(R.string.esptouch1_wifi_5g_message);
             }
@@ -167,7 +166,8 @@ public class EspTouchActivity extends EspTouchActivityAbs {
 
     private void executeEsptouch() {
         EspTouchViewModel viewModel = mViewModel;
-        String ssid = viewModel.ssidBytes == null ? null:viewModel.ssid;
+        CharSequence ssidStr = mViewModel.apSsidTV.getText();
+        String ssid = ssidStr == null ? null : ssidStr.toString();
         CharSequence pwdStr = mViewModel.apPasswordEdit.getText();
         String password = pwdStr == null ? null : pwdStr.toString();
         CharSequence devCountStr = mViewModel.deviceCountEdit.getText();
@@ -178,54 +178,70 @@ public class EspTouchActivity extends EspTouchActivityAbs {
             mTask.cancelEsptouch();
         }
         msgrecv.setText("");
-        if(isWifiApOpen()){
-            mTask = new EsptouchAsyncTask4(this,this.ConfirmBtn);
-            mTask.execute(ssid,password,serverIp, deviceCount);
-            viewModel.confirmBtn.setEnabled(false);
+        mViewModel.messageView.setText("");
+        if(isApOn()){
+
         }else{
-            msgrecv.setText("请开启AP热点，并设置SSID为ESPConfig 密码为12345678\r\n设置之后请重新开始配置\r\n");
+            msgrecv.setText("请确认您已开启AP热点，并设置频段为2.4G，SSID为ESPConfig 密码为12345678\r\n如果无法成功配置，请点击取消，确认热点已经按要求配置后再重新开始\r\n");
         }
+        mTask = new EsptouchAsyncTask4(this,this.ConfirmBtn);
+        mTask.execute(ssid,password,serverIp, deviceCount);
+        viewModel.confirmBtn.setEnabled(false);
 
     }
 
-    public  boolean isWifiApOpen() {
+    public  boolean isApOn() {
+        WifiManager wifimanager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
         try {
-            WifiManager manager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-            //通过放射获取 getWifiApState()方法
-            Method method = manager.getClass().getDeclaredMethod("getWifiApState");
-            //调用getWifiApState() ，获取返回值
-            int state = (int) method.invoke(manager);
-            //通过放射获取 WIFI_AP的开启状态属性
-            Field field = manager.getClass().getDeclaredField("WIFI_AP_STATE_ENABLED");
-            //获取属性值
-            int value = (int) field.get(manager);
-            //判断是否开启
-            if (state == value) {
-                Log.i("SocketInfo", "open ap");
-                return true;
-            } else {
-                Log.i("SocketInfo", "ap is close");
-
-                return false;
-            }
-
-
-
-        } catch (NoSuchMethodException e) {
-            Log.i("SocketInfo", "ap is clNoSuchMethodException");
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            Log.i("SocketInfo", "ap is IllegalAccessException");
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            Log.i("SocketInfo", "ap is InvocationTargetException");
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            Log.i("SocketInfo", "ap is NoSuchFieldException");
-            e.printStackTrace();
+            Method method = wifimanager.getClass().getDeclaredMethod("isWifiApEnabled");
+            method.setAccessible(true);
+            return (Boolean) method.invoke(wifimanager);
+        }
+        catch (Throwable ignored) {
+            Log.i("SocketInfo", "ap is close");
         }
         return false;
     }
+
+//    public  boolean isWifiApOpen() {
+//        try {
+//            WifiManager manager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
+//
+//            //通过放射获取 getWifiApState()方法
+//            Method method = manager.getClass().getDeclaredMethod("getWifiApState");
+//            //调用getWifiApState() ，获取返回值
+//            int state = (int) method.invoke(manager);
+//            //通过放射获取 WIFI_AP的开启状态属性
+//            Field field = manager.getClass().getDeclaredField("WIFI_AP_STATE_ENABLED");
+//            //获取属性值
+//            int value = (int) field.get(manager);
+//            //判断是否开启
+//            if (state == value) {
+//                Log.i("SocketInfo", "open ap");
+//                return true;
+//            } else {
+//                Log.i("SocketInfo", "ap is close");
+//
+//                return false;
+//            }
+//
+//
+//
+//        } catch (NoSuchMethodException e) {
+//            Log.i("SocketInfo", "ap is clNoSuchMethodException");
+//            e.printStackTrace();
+//        } catch (IllegalAccessException e) {
+//            Log.i("SocketInfo", "ap is IllegalAccessException");
+//            e.printStackTrace();
+//        } catch (InvocationTargetException e) {
+//            Log.i("SocketInfo", "ap is InvocationTargetException");
+//            e.printStackTrace();
+//        } catch (NoSuchFieldException e) {
+//            Log.i("SocketInfo", "ap is NoSuchFieldException");
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
 
     private void executeCancelConfig() {
 

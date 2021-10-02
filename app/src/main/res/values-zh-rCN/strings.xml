@@ -8,7 +8,7 @@
 
     <string name="esptouch_message_permission">需要位置权限来获取 Wi-Fi 信息。 \n点击申请权限</string>
     <string name="esptouch_message_location">请打开 GPS 以获取 Wi-Fi 信息。</string>
-    <string name="esptouch_message_wifi_connection">请先连上 Wi-Fi</string>
+    <string name="esptouch_message_wifi_connection">请先连上 Wi-Fi,或手动输入配置AP的SSID</string>
     <string name="esptouch_message_wifi_frequency">当前连接的是 5G Wi-Fi, 设备仅支持 2.4G Wi-Fi</string>
 
     <string name="esptouch1_title">EspTouch</string>
