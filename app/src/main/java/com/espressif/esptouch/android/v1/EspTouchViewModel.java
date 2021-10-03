@@ -22,11 +22,24 @@ class EspTouchViewModel {
     CharSequence message;
 
     boolean confirmEnable;
+    boolean islooad;
+
+    void setload(boolean load) {
+        islooad = load;
+    }
 
     void invalidateAll() {
-        apSsidTV.setText(ssid);
+        if(islooad){
+
+        }else{
+            apSsidTV.setText(ssid);
+            messageView.setText(message);
+        }
+
 //        apBssidTV.setText(bssid);
-        messageView.setText(message);
+
         confirmBtn.setEnabled(confirmEnable);
     }
+
+
 }

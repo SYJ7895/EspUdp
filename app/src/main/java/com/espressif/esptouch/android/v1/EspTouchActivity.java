@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -43,7 +44,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EspTouchActivity extends EspTouchActivityAbs {
     private static final String TAG = EspTouchActivity.class.getSimpleName();
@@ -58,6 +61,7 @@ public class EspTouchActivity extends EspTouchActivityAbs {
     private MyHandler myHandler;
     private MyBroadcastReceiver myBroadcastReceiver ;
     private Button cancelBtn,ConfirmBtn;
+    private Preferences shareconfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +86,30 @@ public class EspTouchActivity extends EspTouchActivityAbs {
         cancelBtn = findViewById(R.id.cancelBtn);
         cancelBtn.setOnClickListener(v -> executeCancelConfig());
         BindReceiver();
+
+        shareconfig = new Preferences(this);
+
+        Map<String, String> map = shareconfig.load();
+        String Savessid = map.get("ssid");
+        if(Savessid.equals("")){
+
+        }else{
+            mViewModel.apSsidTV.setText(Savessid);
+            mViewModel.setload(true);
+        }
+        String Savepasswd = map.get("passwd");
+        if(Savepasswd.equals("")){
+
+        }else{
+            mViewModel.apPasswordEdit.setText(Savepasswd);
+        }
+
+        String Saveserverip = map.get("serverip");
+        if(Saveserverip.equals("")){
+
+        }else{
+            mViewModel.serverIpEdit.setText(Saveserverip);
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION};
@@ -186,6 +214,7 @@ public class EspTouchActivity extends EspTouchActivityAbs {
         }
         mTask = new EsptouchAsyncTask4(this,this.ConfirmBtn);
         mTask.execute(ssid,password,serverIp, deviceCount);
+        shareconfig.save(ssid,password,serverIp);
         viewModel.confirmBtn.setEnabled(false);
 
     }
@@ -203,46 +232,6 @@ public class EspTouchActivity extends EspTouchActivityAbs {
         return false;
     }
 
-//    public  boolean isWifiApOpen() {
-//        try {
-//            WifiManager manager = (WifiManager) context.getSystemService(context.WIFI_SERVICE);
-//
-//            //通过放射获取 getWifiApState()方法
-//            Method method = manager.getClass().getDeclaredMethod("getWifiApState");
-//            //调用getWifiApState() ，获取返回值
-//            int state = (int) method.invoke(manager);
-//            //通过放射获取 WIFI_AP的开启状态属性
-//            Field field = manager.getClass().getDeclaredField("WIFI_AP_STATE_ENABLED");
-//            //获取属性值
-//            int value = (int) field.get(manager);
-//            //判断是否开启
-//            if (state == value) {
-//                Log.i("SocketInfo", "open ap");
-//                return true;
-//            } else {
-//                Log.i("SocketInfo", "ap is close");
-//
-//                return false;
-//            }
-//
-//
-//
-//        } catch (NoSuchMethodException e) {
-//            Log.i("SocketInfo", "ap is clNoSuchMethodException");
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            Log.i("SocketInfo", "ap is IllegalAccessException");
-//            e.printStackTrace();
-//        } catch (InvocationTargetException e) {
-//            Log.i("SocketInfo", "ap is InvocationTargetException");
-//            e.printStackTrace();
-//        } catch (NoSuchFieldException e) {
-//            Log.i("SocketInfo", "ap is NoSuchFieldException");
-//            e.printStackTrace();
-//        }
-//        return false;
-//    }
-
     private void executeCancelConfig() {
 
         mViewModel.confirmBtn.setEnabled(true);
@@ -255,6 +244,33 @@ public class EspTouchActivity extends EspTouchActivityAbs {
     private void BindReceiver(){
         IntentFilter intentFilter = new IntentFilter("udpReceiver");
         registerReceiver(myBroadcastReceiver,intentFilter);
+    }
+
+    public class Preferences {
+        private Context context;
+        public Preferences(Context context) {
+            this.context=context;
+        }
+
+        public void save(String ssid, String passwd,String serverip) {
+            //保存文件名字为"shared",保存形式为Context.MODE_PRIVATE即该数据只能被本应用读取
+            SharedPreferences preferences = context.getSharedPreferences("config", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString("ssid", ssid);
+            editor.putString("passwd", passwd);
+            editor.putString("serverip", serverip);
+            editor.commit();//提交数据
+        }
+
+        public Map<String, String> load() {
+            //保存文件名字为"shared",保存形式为Context.MODE_PRIVATE即该数据只能被本应用读取
+            SharedPreferences preferences=context.getSharedPreferences("config",Context.MODE_PRIVATE);
+            Map<String, String> map=new HashMap<String, String>();
+            map.put("ssid",preferences.getString("ssid",""));
+            map.put("passwd",preferences.getString("passwd",""));
+            map.put("serverip",preferences.getString("serverip",""));
+            return  map;
+        }
     }
 
     private class MyHandler extends Handler {
